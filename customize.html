@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FITBLUSH — Customize</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .session-title {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+    .summary-strip {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 12px 0 24px;
+    }
+    .add-exercise-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: var(--glass);
+      border: 1px dashed var(--glass-border);
+      border-radius: var(--radius-md);
+      color: var(--text-2);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+      transition: all var(--transition);
+    }
+    .add-exercise-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+    /* Add exercise modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 300;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-sheet {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--bg-2);
+      border-top: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 20px 20px 40px;
+      max-height: 70vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .modal-overlay.active .modal-sheet { transform: translateY(0); }
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: var(--glass-border);
+      border-radius: 100px;
+      margin: 0 auto 16px;
+    }
+    .modal-search {
+      margin-bottom: 12px;
+    }
+
+    /* Rest time global */
+    .rest-config {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+    }
+    .rest-config label { font-weight: 600; font-size: 0.9rem; }
+    .rest-config p { font-size: 0.78rem; color: var(--text-2); margin-top: 2px; }
+    .rest-selector {
+      display: flex;
+      gap: 6px;
+    }
+    .rest-chip {
+      padding: 6px 12px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--glass-2);
+      color: var(--text-2);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all var(--transition);
+    }
+    .rest-chip.active {
+      background: var(--accent-blue-dim);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    /* remove exercise */
+    .remove-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--text-3);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: all var(--transition);
+      margin-top: 2px;
+    }
+    .remove-btn:hover { background: rgba(255,80,80,0.12); border-color: #ff5050; color: #ff5050; }
+
+    .exercise-row-wrap { position: relative; }
+  </style>
+</head>
+<body>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="app-container">
+    <nav class="navbar">
+      <a href="builder.html" class="navbar-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back
+      </a>
+      <span class="navbar-logo">CUSTOMIZE</span>
+    </nav>
+
+    <div id="main-content">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- START BUTTON -->
+    <div style="position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 70%, transparent);padding:16px 0 28px;z-index:50;margin-top:24px">
+      <button class="btn btn-orange btn-full btn-lg" onclick="startWorkout()">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Start Workout
+      </button>
+    </div>
+  </div>
+
+  <!-- ADD EXERCISE MODAL -->
+  <div class="modal-overlay" id="add-modal" onclick="closeModal(event)">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div style="font-family:var(--font-head);font-size:1.2rem;font-weight:700;margin-bottom:14px">Add Exercise</div>
+      <div class="modal-search">
+        <input class="input" type="text" placeholder="Search exercises…" oninput="filterModal(this.value)" id="modal-search-input">
+      </div>
+      <div id="modal-exercise-list"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    let session = WorkoutStore.getSession();
+    if (!session) { location.href = 'builder.html'; }
+
+    let globalRest = 60; // seconds
+
+    // ─── RENDER PAGE ──────────────────────────────────────
+    function renderPage() {
+      const totalSets = session.exercises.reduce((s, e) => s + e.sets, 0);
+      const totalExs  = session.exercises.length;
+      const estMin    = Math.round(totalSets * (globalRest + 40) / 60);
+
+      document.getElementById('main-content').innerHTML = `
+        <div class="fade-in">
+          <div class="session-title">${session.name}</div>
+          <div class="summary-strip">
+            <span class="badge badge-glass">${totalExs} exercises</span>
+            <span class="badge badge-glass">${totalSets} sets</span>
+            <span class="badge badge-blue">~${estMin} min</span>
+          </div>
+
+          <div class="rest-config">
+            <div>
+              <label>Rest Time</label>
+              <p>Between every set</p>
+            </div>
+            <div class="rest-selector">
+              ${[30,60,90,120].map(v => `
+                <div class="rest-chip ${v===globalRest?'active':''}" onclick="setRest(${v})">${v}s</div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="label label-blue" style="margin-bottom:10px">Exercises — Edit Sets & Reps</div>
+          <div id="exercise-rows">
+            ${session.exercises.map((ex, i) => buildExerciseRowFull(ex, i)).join('')}
+          </div>
+
+          <button class="add-exercise-btn" onclick="openModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add Exercise
+          </button>
+        </div>
+      `;
+    }
+
+    function buildExerciseRowFull(ex, index) {
+      return `
+        <div class="exercise-row-wrap" style="margin-bottom:10px">
+          <div class="exercise-row">
+            <div style="flex:1;min-width:0">
+              <div class="exercise-name">${ex.name}</div>
+              <div class="exercise-muscle">${ex.muscle}</div>
+            </div>
+            <div class="exercise-controls">
+              <div class="field-group">
+                <label>Sets</label>
+                <input class="input-num" type="number" min="1" max="20" value="${ex.sets}"
+                       onchange="updateField(${index},'sets',this.value)" />
+              </div>
+              <div class="field-group">
+                <label>Reps</label>
+                <input class="input-num" type="number" min="1" max="50" value="${ex.reps}"
+                       onchange="updateField(${index},'reps',this.value)" />
+              </div>
+              <button class="remove-btn" onclick="removeExercise(${index})" title="Remove">×</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function updateField(index, field, value) {
+      session.exercises[index][field] = Math.max(1, parseInt(value) || 1);
+      WorkoutStore.saveSession(session);
+      // Re-render just the summary badges
+      const totalSets = session.exercises.reduce((s, e) => s + e.sets, 0);
+      const totalExs  = session.exercises.length;
+      const estMin    = Math.round(totalSets * (globalRest + 40) / 60);
+      const strip = document.querySelector('.summary-strip');
+      if (strip) strip.innerHTML = `
+        <span class="badge badge-glass">${totalExs} exercises</span>
+        <span class="badge badge-glass">${totalSets} sets</span>
+        <span class="badge badge-blue">~${estMin} min</span>`;
+    }
+
+    function removeExercise(index) {
+      session.exercises.splice(index, 1);
+      WorkoutStore.saveSession(session);
+      renderPage();
+    }
+
+    function setRest(val) {
+      globalRest = val;
+      session.exercises.forEach(e => e.rest = val);
+      WorkoutStore.saveSession(session);
+      renderPage();
+    }
+
+    // ─── MODAL ────────────────────────────────────────────
+    let allModalExercises = [];
+    function buildModalExercises() {
+      allModalExercises = [];
+      Object.values(EXERCISE_DB).forEach(muscle => {
+        Object.values(muscle.groups).forEach(group => {
+          group.exercises.forEach(ex => allModalExercises.push(ex));
+        });
+      });
+    }
+    buildModalExercises();
+
+    function openModal() {
+      document.getElementById('add-modal').classList.add('active');
+      document.getElementById('modal-search-input').value = '';
+      renderModalList(allModalExercises);
+      setTimeout(() => document.getElementById('modal-search-input').focus(), 350);
+    }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById('add-modal')) {
+        document.getElementById('add-modal').classList.remove('active');
+      }
+    }
+
+    function filterModal(q) {
+      const filtered = q.trim()
+        ? allModalExercises.filter(ex => ex.name.toLowerCase().includes(q.toLowerCase()) || ex.muscle.toLowerCase().includes(q.toLowerCase()))
+        : allModalExercises;
+      renderModalList(filtered);
+    }
+
+    function renderModalList(list) {
+      const el = document.getElementById('modal-exercise-list');
+      if (!list.length) { el.innerHTML = '<p style="color:var(--text-3);font-size:0.88rem;text-align:center;padding:20px">No results</p>'; return; }
+      el.innerHTML = list.map(ex => `
+        <div class="ex-check-row" onclick="addExerciseFromModal('${ex.name.replace(/'/g,"\\'")}','${ex.muscle}')">
+          <div>
+            <div class="ex-check-name">${ex.name}</div>
+            <div class="ex-check-muscle">${ex.muscle}</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color:var(--text-3)">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
+      `).join('');
+    }
+
+    function addExerciseFromModal(name, muscle) {
+      session.exercises.push({ name, muscle, sets: 3, reps: 10, rest: globalRest });
+      WorkoutStore.saveSession(session);
+      document.getElementById('add-modal').classList.remove('active');
+      renderPage();
+      showToast(`${name} added`);
+    }
+
+    // ─── START ────────────────────────────────────────────
+    function startWorkout() {
+      if (!session.exercises.length) { showToast('Add at least one exercise!'); return; }
+      WorkoutStore.saveSession(session);
+      location.href = 'workout.html';
+    }
+
+    // ─── INIT ─────────────────────────────────────────────
+    renderPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FITBLUSH — Premium Fitness</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="app-container">
+    <!-- NAV -->
+    <nav class="navbar">
+      <span class="navbar-logo">FITBLUSH</span>
+      <a href="contact.html" class="btn btn-ghost">Contact</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero fade-in">
+      <div class="hero-eyebrow">Premium Fitness Platform</div>
+      <h1>Train<br><span>Smarter.</span><br>Lift Heavier.</h1>
+      <p>Professional-grade workouts, fully customizable programs, and real-time tracking — built for serious lifters.</p>
+      <a href="builder.html" class="btn btn-primary btn-lg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="18" height="18">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Start Training
+      </a>
+    </section>
+
+    <!-- QUOTE -->
+    <div class="quote-bar fade-in" id="quote-bar">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="color:var(--accent-blue);flex-shrink:0">
+        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+      </svg>
+      <p id="quote-text"></p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stat-grid fade-in">
+      <div class="stat-box blue">
+        <div class="val">40+</div>
+        <div class="lbl">Premium Exercises</div>
+      </div>
+      <div class="stat-box orange">
+        <div class="val">3</div>
+        <div class="lbl">Workout Modes</div>
+      </div>
+      <div class="stat-box">
+        <div class="val">7</div>
+        <div class="lbl">Muscle Groups</div>
+      </div>
+      <div class="stat-box">
+        <div class="val">∞</div>
+        <div class="lbl">Custom Splits</div>
+      </div>
+    </div>
+
+    <!-- MODES SECTION -->
+    <div class="section-header">
+      <h2>Choose Your Mode</h2>
+      <p>Three intelligent training systems, all fully customizable.</p>
+    </div>
+
+    <div class="stagger">
+      <a href="builder.html?mode=weekly" class="mode-card blue" style="display:block;text-decoration:none;margin-bottom:10px">
+        <div class="mode-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <span class="badge badge-blue" style="margin-bottom:6px">Most Popular</span>
+        <h3>Weekly Plan</h3>
+        <p>Full 7-day Push / Pull / Legs program. Edit any exercise, sets, and reps before you train.</p>
+      </a>
+
+      <a href="builder.html?mode=split" class="mode-card orange" style="display:block;text-decoration:none;margin-bottom:10px">
+        <div class="mode-icon orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h3>Split Workouts</h3>
+        <p>Choose a muscle-group split like Back + Biceps or Chest + Triceps. Fully editable.</p>
+      </a>
+
+      <a href="builder.html?mode=custom" class="mode-card" style="display:block;text-decoration:none">
+        <div class="mode-icon glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
+        <h3>Custom Workout</h3>
+        <p>Pick any exercises from any muscle group. Build your own session from scratch.</p>
+      </a>
+    </div>
+
+    <!-- RECENT HISTORY -->
+    <div class="section-header mt-32">
+      <h2>Recent Workouts</h2>
+      <p>Your last few completed sessions.</p>
+    </div>
+    <div id="history-list">
+      <div class="card card-sm text-center" style="color:var(--text-3);font-size:0.88rem;padding:28px">
+        No workouts yet. Hit <em>Start Training</em> to begin.
+      </div>
+    </div>
+
+    <div class="pb-32"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Quote
+    document.getElementById('quote-text').textContent = randomQuote();
+
+    // History
+    const hist = WorkoutStore.getHistory();
+    const histEl = document.getElementById('history-list');
+    if (hist.length) {
+      histEl.innerHTML = hist.slice(0, 4).map(h => {
+        const d = new Date(h.date);
+        const dateStr = d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+        const timeStr = d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+        return `
+          <div class="day-row" style="cursor:default;margin-bottom:10px">
+            <div class="day-dot"></div>
+            <div class="day-row-text">
+              <h4>${h.name || 'Workout'}</h4>
+              <p>${h.exercises || 0} exercises · ${h.totalSets || 0} sets · ${formatTime(h.duration || 0)}</p>
+            </div>
+            <span class="text-xs text-3">${dateStr}<br>${timeStr}</span>
+          </div>`;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

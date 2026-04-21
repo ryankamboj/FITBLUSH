@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FITBLUSH — Build Workout</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .mode-tabs {
+      display: flex;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .mode-tab {
+      flex: 1;
+      padding: 10px 8px;
+      border-radius: 11px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-3);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .mode-tab.active {
+      background: var(--accent-blue);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(79,156,249,0.3);
+    }
+
+    /* Custom builder */
+    .muscle-section { margin-bottom: 20px; }
+    .muscle-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .muscle-header h3 {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .group-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-3);
+      margin: 12px 0 8px;
+    }
+    .ex-check-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: border-color var(--transition);
+      margin-bottom: 6px;
+    }
+    .ex-check-row:hover { border-color: rgba(255,255,255,0.14); }
+    .ex-check-row.selected { border-color: var(--accent-blue); background: var(--accent-blue-dim); }
+    .ex-check-name { font-size: 0.88rem; font-weight: 500; }
+    .ex-check-muscle { font-size: 0.73rem; color: var(--text-3); margin-top: 1px; }
+    .check-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--transition);
+    }
+    .ex-check-row.selected .check-icon {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+    .selection-bar {
+      position: sticky;
+      top: 68px;
+      z-index: 80;
+      background: linear-gradient(to bottom, var(--bg) 80%, transparent);
+      padding-bottom: 8px;
+    }
+    .selected-count {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+    }
+    .selected-count span { font-size: 0.85rem; font-weight: 600; }
+    .selected-count .num { color: var(--accent-blue); }
+  </style>
+</head>
+<body>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="app-container">
+    <!-- NAV -->
+    <nav class="navbar">
+      <a href="index.html" class="navbar-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Home
+      </a>
+      <span class="navbar-logo">BUILD</span>
+    </nav>
+
+    <!-- TABS -->
+    <div class="mode-tabs" id="mode-tabs">
+      <div class="mode-tab" data-mode="weekly"  onclick="switchMode('weekly')">Weekly</div>
+      <div class="mode-tab" data-mode="split"   onclick="switchMode('split')">Splits</div>
+      <div class="mode-tab" data-mode="custom"  onclick="switchMode('custom')">Custom</div>
+    </div>
+
+    <!-- ─ WEEKLY MODE ──────────────────────────────────────── -->
+    <div id="mode-weekly" class="mode-panel">
+      <div class="section-header" style="margin-top:0">
+        <h2>Weekly Plan</h2>
+        <p>PPL program — 6 active days. Tap a day to edit and start.</p>
+      </div>
+      <div id="weekly-list" class="stagger"></div>
+    </div>
+
+    <!-- ─ SPLIT MODE ───────────────────────────────────────── -->
+    <div id="mode-split" class="mode-panel hidden">
+      <div class="section-header" style="margin-top:0">
+        <h2>Split Workouts</h2>
+        <p>Choose a muscle group focus. Tap to customise then train.</p>
+      </div>
+      <div id="split-list" class="stagger"></div>
+    </div>
+
+    <!-- ─ CUSTOM MODE ──────────────────────────────────────── -->
+    <div id="mode-custom" class="mode-panel hidden">
+      <div class="section-header" style="margin-top:0">
+        <h2>Custom Workout</h2>
+        <p>Pick any exercises from any muscle group.</p>
+      </div>
+
+      <div class="selection-bar">
+        <div class="selected-count">
+          <span>Selected: <span class="num" id="sel-count">0</span> exercises</span>
+          <button class="btn btn-primary" id="custom-proceed-btn" style="padding:8px 18px;font-size:0.85rem" onclick="proceedCustom()" disabled>
+            Customise →
+          </button>
+        </div>
+      </div>
+
+      <div id="custom-exercise-list" class="mt-16 pb-100"></div>
+    </div>
+
+  </div><!-- end app-container -->
+
+  <script src="script.js"></script>
+  <script>
+    // ── Selected exercises for custom mode
+    let customSelected = new Set();
+
+    // ── Determine initial mode
+    const urlMode = new URLSearchParams(location.search).get('mode') || 'weekly';
+    switchMode(urlMode);
+
+    // ─────────────────────────────────────────────────────────
+    function switchMode(mode) {
+      document.querySelectorAll('.mode-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('mode-' + mode).classList.remove('hidden');
+      document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+      history.replaceState(null,'', '?mode=' + mode);
+
+      if (mode === 'weekly')  buildWeeklyList();
+      if (mode === 'split')   buildSplitList();
+      if (mode === 'custom')  buildCustomList();
+    }
+
+    // ─── WEEKLY ──────────────────────────────────────────────
+    function buildWeeklyList() {
+      const el = document.getElementById('weekly-list');
+      el.innerHTML = WEEKLY_PLAN_DEFAULT.map((day, i) => `
+        <div class="day-row ${day.rest ? '' : ''}" onclick="${day.rest ? '' : `goWeeklyDay(${i})`}"
+             style="${day.rest ? 'cursor:default;opacity:0.5' : ''}">
+          <div class="day-dot ${day.rest ? 'rest' : ''}"></div>
+          <div class="day-row-text">
+            <h4>${day.day} — ${day.label}</h4>
+            <p>${day.rest ? 'Rest & Recovery' : day.exercises.length + ' exercises'}</p>
+          </div>
+          ${day.rest ? '' : `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="color:var(--text-3)">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>`}
+        </div>
+      `).join('');
+    }
+
+    function goWeeklyDay(i) {
+      const day = WEEKLY_PLAN_DEFAULT[i];
+      const session = {
+        name: `${day.day} — ${day.label}`,
+        mode: 'weekly',
+        exercises: cloneExercises(day.exercises)
+      };
+      WorkoutStore.saveSession(session);
+      location.href = 'customize.html';
+    }
+
+    // ─── SPLITS ──────────────────────────────────────────────
+    function buildSplitList() {
+      const el = document.getElementById('split-list');
+      el.innerHTML = SPLITS.map(s => `
+        <div class="split-card" onclick="goSplit('${s.id}')">
+          <div class="split-card-icon">${s.emoji}</div>
+          <div class="split-card-text">
+            <h4>${s.name}</h4>
+            <p>${s.desc} · ${s.exercises.length} exercises</p>
+          </div>
+          <svg class="split-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </div>
+      `).join('');
+    }
+
+    function goSplit(id) {
+      const split = SPLITS.find(s => s.id === id);
+      const session = {
+        name: split.name,
+        mode: 'split',
+        exercises: cloneExercises(split.exercises)
+      };
+      WorkoutStore.saveSession(session);
+      location.href = 'customize.html';
+    }
+
+    // ─── CUSTOM ───────────────────────────────────────────────
+    function buildCustomList() {
+      const el = document.getElementById('custom-exercise-list');
+      let html = '';
+
+      Object.entries(EXERCISE_DB).forEach(([key, muscle]) => {
+        html += `
+          <div class="muscle-section">
+            <div class="muscle-header">
+              <span style="font-size:1.2rem">${muscle.emoji}</span>
+              <h3>${muscle.label}</h3>
+            </div>`;
+
+        Object.entries(muscle.groups).forEach(([gKey, group]) => {
+          html += `<div class="group-label">${group.label}</div>`;
+          group.exercises.forEach((ex, i) => {
+            const uid = `${key}_${gKey}_${i}`;
+            html += `
+              <div class="ex-check-row" id="row-${uid}" onclick="toggleCustomEx('${uid}','${ex.name}','${ex.muscle}')">
+                <div>
+                  <div class="ex-check-name">${ex.name}</div>
+                  <div class="ex-check-muscle">${ex.muscle}</div>
+                </div>
+                <div class="check-icon" id="chk-${uid}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" width="10" height="10">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>`;
+          });
+        });
+        html += `</div>`;
+      });
+      el.innerHTML = html;
+    }
+
+    function toggleCustomEx(uid, name, muscle) {
+      const row = document.getElementById('row-' + uid);
+      const chk = document.getElementById('chk-' + uid);
+      if (customSelected.has(uid)) {
+        customSelected.delete(uid);
+        row.classList.remove('selected');
+        chk.style.background = '';
+        chk.style.borderColor = '';
+      } else {
+        customSelected.add(uid);
+        row.classList.add('selected');
+      }
+      updateSelCount();
+    }
+
+    function updateSelCount() {
+      const n = customSelected.size;
+      document.getElementById('sel-count').textContent = n;
+      const btn = document.getElementById('custom-proceed-btn');
+      btn.disabled = n === 0;
+    }
+
+    function proceedCustom() {
+      if (customSelected.size === 0) return;
+      // Build exercise list from selected UIDs
+      const exercises = [];
+      customSelected.forEach(uid => {
+        const [muscleKey, groupKey, idxStr] = uid.split('_');
+        const ex = EXERCISE_DB[muscleKey].groups[groupKey].exercises[parseInt(idxStr)];
+        exercises.push({ name: ex.name, muscle: ex.muscle, sets: 3, reps: 10, rest: 60 });
+      });
+      const session = { name: 'Custom Workout', mode: 'custom', exercises };
+      WorkoutStore.saveSession(session);
+      location.href = 'customize.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FITBLUSH — Contact</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="app-container">
+    <!-- NAV -->
+    <nav class="navbar">
+      <a href="index.html" class="navbar-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Home
+      </a>
+      <span class="navbar-logo">CONTACT</span>
+    </nav>
+
+    <div style="padding-top:24px">
+
+      <!-- MAIN CARD -->
+      <div class="card contact-card fade-in">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div style="font-family:var(--font-head);font-size:1.4rem;font-weight:700;margin-bottom:8px">Get In Touch</div>
+        <p style="color:var(--text-2);font-size:0.9rem;line-height:1.6;max-width:280px;margin:0 auto 24px">
+          Questions, feedback, feature requests, or just want to say hi — we'd love to hear from you.
+        </p>
+        <a href="mailto:artistryanstudios@gmail.com" class="btn btn-primary btn-full btn-lg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          artistryanstudios@gmail.com
+        </a>
+      </div>
+
+      <!-- INFO CARDS -->
+      <div class="stat-grid mt-20 fade-in">
+        <div class="stat-box">
+          <div class="val" style="font-size:1.5rem">🏋️</div>
+          <div class="lbl" style="margin-top:8px;font-weight:600;color:var(--text-2)">Premium Workouts</div>
+        </div>
+        <div class="stat-box">
+          <div class="val" style="font-size:1.5rem">💾</div>
+          <div class="lbl" style="margin-top:8px;font-weight:600;color:var(--text-2)">Offline Ready</div>
+        </div>
+        <div class="stat-box">
+          <div class="val" style="font-size:1.5rem">📱</div>
+          <div class="lbl" style="margin-top:8px;font-weight:600;color:var(--text-2)">Mobile First</div>
+        </div>
+        <div class="stat-box">
+          <div class="val" style="font-size:1.5rem">⚡</div>
+          <div class="lbl" style="margin-top:8px;font-weight:600;color:var(--text-2)">Zero Bloat</div>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="card mt-20 fade-in" style="padding:24px">
+        <div class="label label-blue" style="margin-bottom:12px">About FITBLUSH</div>
+        <p style="color:var(--text-2);font-size:0.9rem;line-height:1.7">
+          FITBLUSH is a premium, mobile-first fitness platform built for serious lifters.
+          No subscriptions, no bloat — just clean, powerful workout tools that work offline
+          and keep your data on your device.
+        </p>
+        <div class="divider"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="tag">HTML · CSS · JS</span>
+          <span class="tag">No Backend</span>
+          <span class="tag">localStorage</span>
+          <span class="tag">Mobile-First</span>
+          <span class="tag">Open Source</span>
+        </div>
+      </div>
+
+      <!-- CONTACT FORM -->
+      <div class="card mt-20 fade-in">
+        <div class="label label-orange" style="margin-bottom:16px">Send a Message</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <label class="label" style="margin-bottom:6px">Your Name</label>
+            <input class="input" type="text" placeholder="John Doe" id="form-name">
+          </div>
+          <div>
+            <label class="label" style="margin-bottom:6px">Email</label>
+            <input class="input" type="email" placeholder="you@email.com" id="form-email">
+          </div>
+          <div>
+            <label class="label" style="margin-bottom:6px">Message</label>
+            <textarea class="input" rows="4" placeholder="Your message…" id="form-msg"
+              style="resize:vertical;min-height:90px"></textarea>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="sendMessage()">
+            Send Message
+          </button>
+        </div>
+      </div>
+
+      <div class="pb-32 mt-20 text-center text-xs text-3">
+        Built with ❤️ by ArtistRyan Studios
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast-el"></div>
+
+  <script src="script.js"></script>
+  <script>
+    function sendMessage() {
+      const name  = document.getElementById('form-name').value.trim();
+      const email = document.getElementById('form-email').value.trim();
+      const msg   = document.getElementById('form-msg').value.trim();
+      if (!name || !email || !msg) { showToast('Please fill in all fields.'); return; }
+      // Build mailto link
+      const subject = encodeURIComponent(`FITBLUSH Message from ${name}`);
+      const body    = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+      window.location.href = `mailto:artistryanstudios@gmail.com?subject=${subject}&body=${body}`;
+    }
+  </script>
+</body>
+</html>
