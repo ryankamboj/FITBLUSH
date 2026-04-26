@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3664134291252435"
-     crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FITBLUSH — Customize</title>
   <link rel="stylesheet" href="style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3664134291252435"
+     crossorigin="anonymous"></script>
   <style>
     .session-title {
       font-family: var(--font-head);
@@ -15,12 +16,14 @@
       letter-spacing: 0.3px;
       margin-bottom: 4px;
     }
+
     .summary-strip {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       margin: 12px 0 24px;
     }
+
     .add-exercise-btn {
       display: flex;
       align-items: center;
@@ -38,13 +41,17 @@
       margin-top: 10px;
       transition: all var(--transition);
     }
-    .add-exercise-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+    .add-exercise-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
 
     /* Add exercise modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(10,10,10,0.85);
+      background: rgba(10, 10, 10, 0.85);
       backdrop-filter: blur(8px);
       z-index: 300;
       display: flex;
@@ -53,7 +60,12 @@
       pointer-events: none;
       transition: opacity 0.3s;
     }
-    .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
     .modal-sheet {
       width: 100%;
       max-width: 480px;
@@ -65,15 +77,21 @@
       max-height: 70vh;
       overflow-y: auto;
       transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .modal-overlay.active .modal-sheet { transform: translateY(0); }
+
+    .modal-overlay.active .modal-sheet {
+      transform: translateY(0);
+    }
+
     .modal-handle {
-      width: 36px; height: 4px;
+      width: 36px;
+      height: 4px;
       background: var(--glass-border);
       border-radius: 100px;
       margin: 0 auto 16px;
     }
+
     .modal-search {
       margin-bottom: 12px;
     }
@@ -89,12 +107,23 @@
       border-radius: var(--radius-md);
       margin-bottom: 16px;
     }
-    .rest-config label { font-weight: 600; font-size: 0.9rem; }
-    .rest-config p { font-size: 0.78rem; color: var(--text-2); margin-top: 2px; }
+
+    .rest-config label {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .rest-config p {
+      font-size: 0.78rem;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
     .rest-selector {
       display: flex;
       gap: 6px;
     }
+
     .rest-chip {
       padding: 6px 12px;
       border-radius: 100px;
@@ -106,6 +135,7 @@
       border: 1px solid transparent;
       transition: all var(--transition);
     }
+
     .rest-chip.active {
       background: var(--accent-blue-dim);
       border-color: var(--accent-blue);
@@ -114,12 +144,15 @@
 
     /* remove exercise */
     .remove-btn {
-      width: 28px; height: 28px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       background: transparent;
       border: 1px solid var(--glass-border);
       color: var(--text-3);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
       font-size: 1.1rem;
@@ -127,11 +160,19 @@
       transition: all var(--transition);
       margin-top: 2px;
     }
-    .remove-btn:hover { background: rgba(255,80,80,0.12); border-color: #ff5050; color: #ff5050; }
 
-    .exercise-row-wrap { position: relative; }
+    .remove-btn:hover {
+      background: rgba(255, 80, 80, 0.12);
+      border-color: #ff5050;
+      color: #ff5050;
+    }
+
+    .exercise-row-wrap {
+      position: relative;
+    }
   </style>
 </head>
+
 <body>
   <div class="bg-orb bg-orb-1"></div>
   <div class="bg-orb bg-orb-2"></div>
@@ -140,7 +181,7 @@
     <nav class="navbar">
       <a href="builder.html" class="navbar-back">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <polyline points="15 18 9 12 15 6"/>
+          <polyline points="15 18 9 12 15 6" />
         </svg>
         Back
       </a>
@@ -152,10 +193,11 @@
     </div>
 
     <!-- START BUTTON -->
-    <div style="position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 70%, transparent);padding:16px 0 28px;z-index:50;margin-top:24px">
+    <div
+      style="position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 70%, transparent);padding:16px 0 28px;z-index:50;margin-top:24px">
       <button class="btn btn-orange btn-full btn-lg" onclick="startWorkout()">
         <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-          <polygon points="5 3 19 12 5 21 5 3"/>
+          <polygon points="5 3 19 12 5 21 5 3" />
         </svg>
         Start Workout
       </button>
@@ -168,7 +210,8 @@
       <div class="modal-handle"></div>
       <div style="font-family:var(--font-head);font-size:1.2rem;font-weight:700;margin-bottom:14px">Add Exercise</div>
       <div class="modal-search">
-        <input class="input" type="text" placeholder="Search exercises…" oninput="filterModal(this.value)" id="modal-search-input">
+        <input class="input" type="text" placeholder="Search exercises…" oninput="filterModal(this.value)"
+          id="modal-search-input">
       </div>
       <div id="modal-exercise-list"></div>
     </div>
@@ -184,8 +227,8 @@
     // ─── RENDER PAGE ──────────────────────────────────────
     function renderPage() {
       const totalSets = session.exercises.reduce((s, e) => s + e.sets, 0);
-      const totalExs  = session.exercises.length;
-      const estMin    = Math.round(totalSets * (globalRest + 40) / 60);
+      const totalExs = session.exercises.length;
+      const estMin = Math.round(totalSets * (globalRest + 40) / 60);
 
       document.getElementById('main-content').innerHTML = `
         <div class="fade-in">
@@ -202,8 +245,8 @@
               <p>Between every set</p>
             </div>
             <div class="rest-selector">
-              ${[30,60,90,120].map(v => `
-                <div class="rest-chip ${v===globalRest?'active':''}" onclick="setRest(${v})">${v}s</div>
+              ${[30, 60, 90, 120].map(v => `
+                <div class="rest-chip ${v === globalRest ? 'active' : ''}" onclick="setRest(${v})">${v}s</div>
               `).join('')}
             </div>
           </div>
@@ -253,8 +296,8 @@
       WorkoutStore.saveSession(session);
       // Re-render just the summary badges
       const totalSets = session.exercises.reduce((s, e) => s + e.sets, 0);
-      const totalExs  = session.exercises.length;
-      const estMin    = Math.round(totalSets * (globalRest + 40) / 60);
+      const totalExs = session.exercises.length;
+      const estMin = Math.round(totalSets * (globalRest + 40) / 60);
       const strip = document.querySelector('.summary-strip');
       if (strip) strip.innerHTML = `
         <span class="badge badge-glass">${totalExs} exercises</span>
@@ -311,7 +354,7 @@
       const el = document.getElementById('modal-exercise-list');
       if (!list.length) { el.innerHTML = '<p style="color:var(--text-3);font-size:0.88rem;text-align:center;padding:20px">No results</p>'; return; }
       el.innerHTML = list.map(ex => `
-        <div class="ex-check-row" onclick="addExerciseFromModal('${ex.name.replace(/'/g,"\\'")}','${ex.muscle}')">
+        <div class="ex-check-row" onclick="addExerciseFromModal('${ex.name.replace(/'/g, "\\'")}','${ex.muscle}')">
           <div>
             <div class="ex-check-name">${ex.name}</div>
             <div class="ex-check-muscle">${ex.muscle}</div>
@@ -342,4 +385,5 @@
     renderPage();
   </script>
 </body>
+
 </html>

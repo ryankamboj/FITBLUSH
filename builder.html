@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3664134291252435"
-     crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FITBLUSH — Build Workout</title>
   <link rel="stylesheet" href="style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3664134291252435"
+     crossorigin="anonymous"></script>
   <style>
     .mode-tabs {
       display: flex;
@@ -17,6 +18,7 @@
       gap: 4px;
       margin-bottom: 24px;
     }
+
     .mode-tab {
       flex: 1;
       padding: 10px 8px;
@@ -28,25 +30,31 @@
       cursor: pointer;
       transition: all var(--transition);
     }
+
     .mode-tab.active {
       background: var(--accent-blue);
       color: #fff;
-      box-shadow: 0 2px 12px rgba(79,156,249,0.3);
+      box-shadow: 0 2px 12px rgba(79, 156, 249, 0.3);
     }
 
     /* Custom builder */
-    .muscle-section { margin-bottom: 20px; }
+    .muscle-section {
+      margin-bottom: 20px;
+    }
+
     .muscle-header {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 10px;
     }
+
     .muscle-header h3 {
       font-family: var(--font-head);
       font-size: 1rem;
       font-weight: 700;
     }
+
     .group-label {
       font-size: 0.72rem;
       font-weight: 700;
@@ -55,6 +63,7 @@
       color: var(--text-3);
       margin: 12px 0 8px;
     }
+
     .ex-check-row {
       display: flex;
       align-items: center;
@@ -67,22 +76,44 @@
       transition: border-color var(--transition);
       margin-bottom: 6px;
     }
-    .ex-check-row:hover { border-color: rgba(255,255,255,0.14); }
-    .ex-check-row.selected { border-color: var(--accent-blue); background: var(--accent-blue-dim); }
-    .ex-check-name { font-size: 0.88rem; font-weight: 500; }
-    .ex-check-muscle { font-size: 0.73rem; color: var(--text-3); margin-top: 1px; }
+
+    .ex-check-row:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .ex-check-row.selected {
+      border-color: var(--accent-blue);
+      background: var(--accent-blue-dim);
+    }
+
+    .ex-check-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .ex-check-muscle {
+      font-size: 0.73rem;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+
     .check-icon {
-      width: 22px; height: 22px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       border: 2px solid var(--glass-border);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
       transition: all var(--transition);
     }
+
     .ex-check-row.selected .check-icon {
       background: var(--accent-blue);
       border-color: var(--accent-blue);
     }
+
     .selection-bar {
       position: sticky;
       top: 68px;
@@ -90,6 +121,7 @@
       background: linear-gradient(to bottom, var(--bg) 80%, transparent);
       padding-bottom: 8px;
     }
+
     .selected-count {
       display: flex;
       align-items: center;
@@ -99,10 +131,18 @@
       border-radius: var(--radius-sm);
       padding: 10px 16px;
     }
-    .selected-count span { font-size: 0.85rem; font-weight: 600; }
-    .selected-count .num { color: var(--accent-blue); }
+
+    .selected-count span {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .selected-count .num {
+      color: var(--accent-blue);
+    }
   </style>
 </head>
+
 <body>
   <div class="bg-orb bg-orb-1"></div>
   <div class="bg-orb bg-orb-2"></div>
@@ -112,7 +152,7 @@
     <nav class="navbar">
       <a href="index.html" class="navbar-back">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <polyline points="15 18 9 12 15 6"/>
+          <polyline points="15 18 9 12 15 6" />
         </svg>
         Home
       </a>
@@ -121,9 +161,9 @@
 
     <!-- TABS -->
     <div class="mode-tabs" id="mode-tabs">
-      <div class="mode-tab" data-mode="weekly"  onclick="switchMode('weekly')">Weekly</div>
-      <div class="mode-tab" data-mode="split"   onclick="switchMode('split')">Splits</div>
-      <div class="mode-tab" data-mode="custom"  onclick="switchMode('custom')">Custom</div>
+      <div class="mode-tab" data-mode="weekly" onclick="switchMode('weekly')">Weekly</div>
+      <div class="mode-tab" data-mode="split" onclick="switchMode('split')">Splits</div>
+      <div class="mode-tab" data-mode="custom" onclick="switchMode('custom')">Custom</div>
     </div>
 
     <!-- ─ WEEKLY MODE ──────────────────────────────────────── -->
@@ -154,7 +194,8 @@
       <div class="selection-bar">
         <div class="selected-count">
           <span>Selected: <span class="num" id="sel-count">0</span> exercises</span>
-          <button class="btn btn-primary" id="custom-proceed-btn" style="padding:8px 18px;font-size:0.85rem" onclick="proceedCustom()" disabled>
+          <button class="btn btn-primary" id="custom-proceed-btn" style="padding:8px 18px;font-size:0.85rem"
+            onclick="proceedCustom()" disabled>
             Customise →
           </button>
         </div>
@@ -180,11 +221,11 @@
       document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
       document.getElementById('mode-' + mode).classList.remove('hidden');
       document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
-      history.replaceState(null,'', '?mode=' + mode);
+      history.replaceState(null, '', '?mode=' + mode);
 
-      if (mode === 'weekly')  buildWeeklyList();
-      if (mode === 'split')   buildSplitList();
-      if (mode === 'custom')  buildCustomList();
+      if (mode === 'weekly') buildWeeklyList();
+      if (mode === 'split') buildSplitList();
+      if (mode === 'custom') buildCustomList();
     }
 
     // ─── WEEKLY ──────────────────────────────────────────────
@@ -318,4 +359,5 @@
     }
   </script>
 </body>
+
 </html>
